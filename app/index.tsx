@@ -36,7 +36,7 @@ const LandingPage = () => {
 
         <View style={styles.buttonContainer}>
           <Pressable
-            onPress={() => router.navigate("/(screens)/login")}
+            onPress={() => router.push("/login")}
             style={styles.getStartButton}
           >
             <AppText style={styles.buttonText}>শুরু করুন</AppText>

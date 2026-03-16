@@ -1,13 +1,85 @@
 import { AppText } from "@/components/AppText";
 import { FONTS } from "@/configs/fonts";
-import { colors } from "@/constants/styles";
 import { AntDesign, Feather } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Image } from "expo-image";
 import vector2 from "@/assets/images/vector-2.svg";
 import logo from "@/assets/images/brand.png";
+import {
+  GoogleSignin,
+  isErrorWithCode,
+  isSuccessResponse,
+  statusCodes,
+} from '@react-native-google-signin/google-signin';
+
+const WEB_CLIENT_ID = process.env.EXPO_PUBLIC_WEB_ID;
+const IOS_CLIENT_ID = process.env.EXPO_PUBLIC_IOS_ID;
+
+GoogleSignin.configure({
+  webClientId: WEB_CLIENT_ID,
+  scopes: ['profile', 'email'], // what API you want to access on behalf of the user, default is email and profile
+  offlineAccess: Boolean(WEB_CLIENT_ID), // request offline access only when web client id exists
+  forceCodeForRefreshToken: false,
+  iosClientId: IOS_CLIENT_ID,
+});
+
+const GoogleLogin = async () => {
+  // Check device capability first to avoid a failed sign-in flow.
+  await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
+
+  // Start Google sign in.
+  return GoogleSignin.signIn();
+};
+
+const googleSignIn = async () => {
+  console.log('Initiating Google sign-in');
+  try {
+    const response = await GoogleLogin();
+    console.log('Google sign-in response: ##########3', response);
+    if (!isSuccessResponse(response)) {
+      return;
+    }
+
+    const user = response.data.user;
+    const idToken = response.data.idToken ?? (await GoogleSignin.getTokens()).idToken;
+
+    if (!idToken) {
+      Alert.alert(
+        'Google Sign-In Configuration Issue',
+        'Could not get an ID token. Set EXPO_PUBLIC_WEB_ID (Web client ID) and rebuild the app.',
+      );
+      return;
+    }
+
+    // TODO: Replace with actual server call when backend is integrated
+    // await processUserData(idToken, user);
+    console.log('Google signIn success', user.email);
+    router.replace('/');
+  } catch (error) {
+    if (isErrorWithCode(error)) {
+      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+        return;
+      }
+
+      if (error.code === statusCodes.IN_PROGRESS) {
+        Alert.alert('Please wait', 'Google sign-in is already in progress.');
+        return;
+      }
+
+      if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+        Alert.alert('Google Play Services', 'Google Play Services are not available on this device.');
+        return;
+      }
+
+      Alert.alert('Google Sign-In Failed', error.message);
+      return;
+    }
+
+    Alert.alert('Google Sign-In Failed', 'Something went wrong. Please try again.');
+  }
+};
 
 const LoginMain = () => {
 
@@ -39,9 +111,9 @@ const LoginMain = () => {
         <View style={styles.bottomSection}>
           <TouchableOpacity
             style={styles.googleButton}
-            onPress={() => console.log("Continue with Google pressed")}
+            onPress={googleSignIn}
           >
-            <AntDesign name="google" size={22} color="#g" />
+            <AntDesign name="google" size={22} color="#DB4437" />
             <Text style={styles.googleButtonText}>Continue with Google</Text>
           </TouchableOpacity>
 
