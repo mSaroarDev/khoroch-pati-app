@@ -7,16 +7,31 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useEffect } from 'react';
 import * as SplashScreen from 'expo-splash-screen';
 
-SplashScreen.preventAutoHideAsync();
+// Keep the splash until root resources are ready, but don't let failures block startup.
+SplashScreen.preventAutoHideAsync().catch(() => {
+  // no-op: preventAutoHideAsync may reject during fast refresh or if already handled.
+});
 
 export default function RootLayout() {
   const { fontsLoaded, fontError } = useFontConfigs();
 
   useEffect(() => {
     if (fontsLoaded || fontError) {
-      SplashScreen.hideAsync();
+      SplashScreen.hideAsync().catch(() => {
+        // no-op: if hiding fails once, rendering still proceeds.
+      });
     }
   }, [fontsLoaded, fontError]);
+
+  useEffect(() => {
+    const splashFallback = setTimeout(() => {
+      SplashScreen.hideAsync().catch(() => {
+        // no-op: best effort fallback for stuck splash in development builds.
+      });
+    }, 3500);
+
+    return () => clearTimeout(splashFallback);
+  }, []);
 
   if (!fontsLoaded && !fontError) {
     return null;
