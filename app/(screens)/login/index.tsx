@@ -56,7 +56,7 @@ const googleSignIn = async () => {
     // TODO: Replace with actual server call when backend is integrated
     // await processUserData(idToken, user);
     console.log('Google signIn success', user.email);
-    router.replace('/');
+    router.replace('/dashboard');
   } catch (error) {
     if (isErrorWithCode(error)) {
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
@@ -85,7 +85,7 @@ const LoginMain = () => {
 
   return (
     <>
-      <StatusBar style="dark" backgroundColor="#F7F8FA" />
+      <StatusBar style="dark" translucent backgroundColor="transparent" />
       <View style={styles.container}>
         <View style={styles.background}>
           <View style={styles.bubbleTop} />
