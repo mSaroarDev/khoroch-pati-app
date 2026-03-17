@@ -2,10 +2,10 @@ import { router } from "expo-router";
 import { Pressable, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Image } from 'expo-image';
-// import logo from "@/assets/images/brand.png";
+import logo from "@/assets/images/brand.png";
 import { AppText } from "@/components/AppText";
 import { FONTS } from "@/configs/fonts";
-// import image1 from "@/assets/images/vector-1.svg";
+import image1 from "@/assets/images/vector-1.svg";
 import { colors, paddingHorizontal } from "@/constants/styles";
 import Feather from '@expo/vector-icons/Feather';
 
@@ -18,11 +18,11 @@ const LandingPage = () => {
       </View>
       <View style={styles.container}>
         <View style={styles.header}>
-          {/* <Image source={logo} style={styles.logo} contentFit="contain" /> */}
+          <Image source={logo} style={styles.logo} contentFit="contain" />
         </View>
 
         <View style={styles.heroCard}>
-          {/* <Image source={image1} style={styles.heroImage} contentFit="contain" /> */}
+          <Image source={image1} style={styles.heroImage} contentFit="contain" />
         </View>
 
         <View style={styles.copy}>

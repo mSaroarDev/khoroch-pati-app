@@ -5,7 +5,7 @@ import { router } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Image } from "expo-image";
-// import vector2 from "@/assets/images/vector-2.svg";
+import vector2 from "@/assets/images/vector-2.svg";
 import logo from "@/assets/images/brand.png";
 import {
   GoogleSignin,
@@ -100,7 +100,7 @@ const LoginMain = () => {
             <Image source={logo} style={styles.logo} contentFit="contain" />
             <View style={styles.headerSpacer} />
           </View>
-          {/* <Image source={vector2} style={styles.vector} contentFit="contain" /> */}
+          <Image source={vector2} style={styles.vector} contentFit="contain" />
           <Text style={styles.title}>সাইন ইন</Text>
           <AppText style={styles.subtitle}>
             আপনার হিসাবের হিসাব, খরচের হিসাব, ধার-বাকির হিসাব, আয়-ব্যয়ের হিসাব, লেনদেনের হিসাব
